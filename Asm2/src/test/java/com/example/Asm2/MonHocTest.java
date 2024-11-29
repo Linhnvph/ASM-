@@ -1,4 +1,4 @@
-package com.example.lap3_4;
+package com.example.Asm2;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -6,9 +6,10 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SubjectListTest {
+class MonHocTest {
     private List<String> subjects;
 
     @BeforeEach
@@ -124,4 +125,18 @@ public class SubjectListTest {
         subjects.clear();
         assertTrue(subjects.isEmpty());
     }
+    @Test
+    void testFindSubjectById_ValidId() {
+        assertEquals("Toán học", MonHoc.findSubjectById(1));
+        assertEquals("Lịch sử", MonHoc.findSubjectById(3));
+        assertEquals("Tin học", MonHoc.findSubjectById(8));
+    }
+
+    @Test
+    void testFindSubjectById_InvalidId() {
+        assertEquals("Không tìm thấy môn học với ID: 0", MonHoc.findSubjectById(0));
+        assertEquals("Không tìm thấy môn học với ID: 9", MonHoc.findSubjectById(9));
+        assertEquals("Không tìm thấy môn học với ID: -1", MonHoc.findSubjectById(-1));
+    }
+
 }

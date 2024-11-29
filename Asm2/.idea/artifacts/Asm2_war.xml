@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Asm2:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>Asm2</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="Lap3_4-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="Asm2:war exploded" />
+    </root>
+  </artifact>
+</component>
