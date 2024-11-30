@@ -4,38 +4,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MonHoc {
-    // Tạo danh sách môn học
-    private static final List<String> subjects = new ArrayList<>();
-
-    static {
-        subjects.add("Toán học");
-        subjects.add("Văn học");
-        subjects.add("Lịch sử");
-        subjects.add("Hóa học");
-        subjects.add("Vật lý");
-        subjects.add("Sinh học");
-        subjects.add("Ngoại ngữ");
-        subjects.add("Tin học");
+    public static List<String> getSubjects() {
+        List<String> subjects = new ArrayList<>();
+        subjects.add("Toán học"); // id = 0
+        subjects.add("Văn học"); // id = 1
+        subjects.add("Lịch sử"); // id = 2
+        subjects.add("Hóa học"); // id = 3
+        subjects.add("Vật lý"); // id = 4
+        subjects.add("Sinh học"); // id = 5
+        subjects.add("Ngoại ngữ"); // id = 6
+        subjects.add("Tin học"); // id = 7
+        return subjects;
     }
 
-    // Phương thức tìm môn học theo ID
-    public static String findSubjectById(int id) {
-        if (id >= 1 && id <= subjects.size()) {
-            return subjects.get(id - 1); // ID bắt đầu từ 1
-        } else {
-            return "Không tìm thấy môn học với ID: " + id;
+    public static String getSubjectById(int id) {
+        List<String> subjects = getSubjects();
+        if (id >= 0 && id < subjects.size()) {
+            return subjects.get(id);
         }
+        return null; // Trả về null nếu id không hợp lệ
     }
-
-    public static void main(String[] args) {
-        // Hiển thị danh sách môn học
-        System.out.println("Danh sách môn học:");
-        for (int i = 0; i < subjects.size(); i++) {
-            System.out.println((i + 1) + ". " + subjects.get(i));
+    public static boolean removeSubjectById(List<String> subjects, int id) {
+        if (id >= 0 && id < subjects.size()) {
+            subjects.remove(id);
+            return true; // Xóa thành công
         }
-
-        // Tìm môn học theo ID (ví dụ ID = 3)
-        int idToFind = 3;
-        System.out.println("\nMôn học với ID " + idToFind + ": " + findSubjectById(idToFind));
+        return false; // Xóa thất bại nếu id không hợp lệ
     }
+    public static boolean updateSubjectById(List<String> subjects, int id, String newSubject) {
+        if (id >= 0 && id < subjects.size()) {
+            subjects.set(id, newSubject);
+            return true; // Cập nhật thành công
+        }
+        return false; // Cập nhật thất bại nếu id không hợp lệ
+    }
+    public static boolean addSubject(List<String> subjects, String newSubject) {
+        if (newSubject != null && !newSubject.trim().isEmpty()) {
+            subjects.add(newSubject);
+            return true; // Thêm thành công
+        }
+        return false; // Không thêm được nếu môn học không hợp lệ
+    }
+
+
 }

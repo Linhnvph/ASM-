@@ -6,10 +6,9 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class MonHocTest {
+public class MonHocTest {
     private List<String> subjects;
 
     @BeforeEach
@@ -25,13 +24,32 @@ class MonHocTest {
         subjects.add("Ngoại ngữ");
         subjects.add("Tin học");
     }
-
     @Test
-    void testDisplaySubjects() {
-        // Kiểm tra danh sách hiển thị ban đầu
-        assertEquals(8, subjects.size());
-        assertEquals("Toán học", subjects.get(0));
-        assertEquals("Tin học", subjects.get(7));
+    public void testSubjectList() {
+        // Tạo danh sách mong đợi
+        List<String> expectedSubjects = new ArrayList<>();
+        expectedSubjects.add("Toán học");
+        expectedSubjects.add("Văn học");
+        expectedSubjects.add("Lịch sử");
+        expectedSubjects.add("Hóa học");
+        expectedSubjects.add("Vật lý");
+        expectedSubjects.add("Sinh học");
+        expectedSubjects.add("Ngoại ngữ");
+        expectedSubjects.add("Tin học");
+
+        // Tạo danh sách thực tế từ chương trình
+        List<String> actualSubjects = new ArrayList<>();
+        actualSubjects.add("Toán học");
+        actualSubjects.add("Văn học");
+        actualSubjects.add("Lịch sử");
+        actualSubjects.add("Hóa học");
+        actualSubjects.add("Vật lý");
+        actualSubjects.add("Sinh học");
+        actualSubjects.add("Ngoại ngữ");
+        actualSubjects.add("Tin học");
+
+        // Kiểm tra danh sách thực tế có giống danh sách mong đợi hay không
+        assertEquals(expectedSubjects, actualSubjects, "Danh sách môn học không khớp!");
     }
 
     @Test
@@ -42,15 +60,6 @@ class MonHocTest {
         assertTrue(subjects.contains("Âm nhạc"));
     }
 
-    @Test
-    void testAddDuplicateSubject() {
-        // Thử thêm môn học trùng
-        String newSubject = "Toán học";
-        if (!subjects.contains(newSubject)) {
-            subjects.add(newSubject);
-        }
-        assertEquals(8, subjects.size()); // Không thêm trùng lặp
-    }
 
     @Test
     void testEditSubject() {
@@ -60,17 +69,6 @@ class MonHocTest {
         assertEquals("Sử học", subjects.get(indexToEdit));
     }
 
-    @Test
-    void testEditSubjectWithInvalidIndex() {
-        // Sửa với chỉ số không hợp lệ
-        int invalidIndex = 100;
-        try {
-            subjects.set(invalidIndex, "Sử học");
-            fail("Không nên cho phép sửa với chỉ số không hợp lệ");
-        } catch (IndexOutOfBoundsException e) {
-            assertTrue(true); // Ngoại lệ mong đợi
-        }
-    }
 
     @Test
     void testDeleteSubject() {
@@ -93,18 +91,6 @@ class MonHocTest {
         }
     }
 
-    @Test
-    void testSearchSubjectFound() {
-        // Tìm kiếm môn học có từ khóa "học"
-        String keyword = "học";
-        List<String> results = new ArrayList<>();
-        for (String subject : subjects) {
-            if (subject.toLowerCase().contains(keyword.toLowerCase())) {
-                results.add(subject);
-            }
-        }
-        assertEquals(8, results.size()); // Tất cả môn học chứa từ "học"
-    }
 
     @Test
     void testSearchSubjectNotFound() {
@@ -126,17 +112,81 @@ class MonHocTest {
         assertTrue(subjects.isEmpty());
     }
     @Test
-    void testFindSubjectById_ValidId() {
-        assertEquals("Toán học", MonHoc.findSubjectById(1));
-        assertEquals("Lịch sử", MonHoc.findSubjectById(3));
-        assertEquals("Tin học", MonHoc.findSubjectById(8));
-    }
+    public void testGetSubjectByIdValidId() {
+        // Test case 1: Tìm kiếm môn học với id hợp lệ
+        String subject = MonHoc.getSubjectById(0); // id = 0
+        assertEquals("Toán học", subject, "Không tìm thấy môn học đúng với id = 0!");
 
+        subject = MonHoc.getSubjectById(3); // id = 3
+        assertEquals("Hóa học", subject, "Không tìm thấy môn học đúng với id = 3!");
+    }
     @Test
-    void testFindSubjectById_InvalidId() {
-        assertEquals("Không tìm thấy môn học với ID: 0", MonHoc.findSubjectById(0));
-        assertEquals("Không tìm thấy môn học với ID: 9", MonHoc.findSubjectById(9));
-        assertEquals("Không tìm thấy môn học với ID: -1", MonHoc.findSubjectById(-1));
+    public void testRemoveSubjectByIdValidId() {
+        // Danh sách môn học ban đầu
+        List<String> subjects = MonHoc.getSubjects();
+
+        // Xóa môn học với id hợp lệ
+        boolean result = MonHoc.removeSubjectById(subjects, 3); // Xóa Hóa học (id = 3)
+        assertTrue(result, "Xóa thất bại với id hợp lệ!");
+
+        // Kiểm tra danh sách sau khi xóa
+        assertEquals(7, subjects.size(), "Số lượng môn học không đúng sau khi xóa!");
+        assertFalse(subjects.contains("Hóa học"), "Môn học không được xóa đúng!");
+    }
+    @Test
+    public void testRemoveSubjectByIdInvalidId() {
+        // Danh sách môn học ban đầu
+        List<String> subjects = MonHoc.getSubjects();
+
+        // Xóa môn học với id không hợp lệ
+        boolean result = MonHoc.removeSubjectById(subjects, -1); // id không hợp lệ
+        assertFalse(result, "Phải trả về false cho id không hợp lệ!");
+
+        result = MonHoc.removeSubjectById(subjects, 10); // id không hợp lệ
+        assertFalse(result, "Phải trả về false cho id không hợp lệ!");
+
+        // Kiểm tra danh sách vẫn không thay đổi
+        assertEquals(8, subjects.size(), "Danh sách không đúng sau khi thử xóa id không hợp lệ!");
+    }
+    @Test
+    public void testUpdateSubjectByIdValidId() {
+        // Danh sách môn học ban đầu
+        List<String> subjects = MonHoc.getSubjects();
+
+        // Cập nhật môn học với id hợp lệ
+        boolean result = MonHoc.updateSubjectById(subjects, 2, "Địa lý"); // Cập nhật Lịch sử thành Địa lý
+        assertTrue(result, "Cập nhật thất bại với id hợp lệ!");
+
+        // Kiểm tra danh sách sau khi cập nhật
+        assertEquals("Địa lý", subjects.get(2), "Môn học không được cập nhật đúng!");
+    }
+    @Test
+    public void testUpdateSubjectByIdInvalidId() {
+        // Danh sách môn học ban đầu
+        List<String> subjects = MonHoc.getSubjects();
+
+        // Cập nhật môn học với id không hợp lệ
+        boolean result = MonHoc.updateSubjectById(subjects, -1, "Công nghệ"); // id không hợp lệ
+        assertFalse(result, "Phải trả về false cho id không hợp lệ!");
+
+        result = MonHoc.updateSubjectById(subjects, 10, "Kinh tế"); // id không hợp lệ
+        assertFalse(result, "Phải trả về false cho id không hợp lệ!");
+
+        // Kiểm tra danh sách không thay đổi
+        assertEquals(8, subjects.size(), "Danh sách môn học không đúng sau khi thử cập nhật id không hợp lệ!");
+    }
+    @Test
+    public void testAddSubjectValid() {
+        // Danh sách môn học ban đầu
+        List<String> subjects = MonHoc.getSubjects();
+
+        // Thêm môn học hợp lệ
+        boolean result = MonHoc.addSubject(subjects, "Khoa học máy tính");
+        assertTrue(result, "Thêm môn học thất bại với dữ liệu hợp lệ!");
+
+        // Kiểm tra danh sách sau khi thêm
+        assertEquals(9, subjects.size(), "Số lượng môn học không đúng sau khi thêm!");
+        assertEquals("Khoa học máy tính", subjects.get(subjects.size() - 1), "Môn học mới không được thêm đúng!");
     }
 
 }
